@@ -4,8 +4,6 @@
 #include "StringMatcher.h"
 #include <chrono>
 
-#define MEASURETIME true
-
 int main(int argc, char** argv)
 {
 	//Parsing parameters
@@ -23,12 +21,8 @@ int main(int argc, char** argv)
 	}
 
 	//Program settings - will be moved to parameters later
-	unsigned int UsedMethod = 1; //0 - naive search, 1 - border search, 2 - KMP
+	unsigned int UsedMethod = 0; //0 - naive search, 1 - border search, 2 - KMP
 	bool verbose = false; //should the program provide additional info
-	bool measureRuntime = true; //should the program measure the average runtime of the searches
-
-	float runtime = 0;
-	unsigned int searches = 0;
 
 
 	DataIO fastaReader(verbose);
@@ -59,9 +53,6 @@ int main(int argc, char** argv)
 
 			std::vector<unsigned int> matches;
 
-#if MEASURETIME
-			std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-#endif
 
 			if (UsedMethod == 0)
 				matches = StringMatcher::NaiveSearch(text, pattern);
@@ -70,10 +61,6 @@ int main(int argc, char** argv)
 			else if (UsedMethod == 2)
 				matches = StringMatcher::KMPSearch(text, pattern);
 
-#if MEASURETIME
-			std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
-			runtime += std::chrono::duration<float, std::milli>(t2 - t1).count();
-#endif
 			for (int i = 0; i < matches.size(); ++i)
 			{
 				std::cout << outer->first << '\t' << '0' << '\t' << inner->first << '\t' << (matches[i] + 1) << '\t' << '0'
@@ -87,11 +74,6 @@ int main(int argc, char** argv)
 			}
 		}
 	}
-
-#if MEASURETIME
-	runtime /= fastaReader.GetSequenceCount() * fastqReader.GetSequenceCount();
-	std::cout << "Average search time is " << runtime << std::endl;
-#endif
 
 	return 0;
 }

@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
+#include <random>
 
 DataIO::DataIO(bool verbose) : Loaded(false), FastaFile(false), Verbose(verbose)
 {
@@ -204,4 +205,63 @@ bool DataIO::Save(const char *fileName)
 bool DataIO::Save(const std::string &fileName)
 {
 	return Save(fileName.c_str());
+}
+
+void DataIO::GenerateData(bool fasta, unsigned int count, int minLength, int maxLength)
+{
+	//We don't want to override actual data with testing
+	if (Loaded)
+		return;
+
+	//Due to the parameters of the built-in distribution, negative numbers are allowed, but since negative length does
+	//not have any sense, we return it
+	if (minLength <= 0 || maxLength <= 0)
+		return;
+	if (minLength > maxLength) //the min length cannot be larger than the max
+		return;
+
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 gen(rd()); // seed the generator
+	std::uniform_int_distribution<> distr(minLength, maxLength); // define the range
+	std::uniform_int_distribution<> charDist(0, 3); //for the acid selection
+
+	FastaFile = fasta;
+
+	for (unsigned int c = 0; c < count; ++c)
+	{
+		std::string name, data;
+		name = std::to_string(c);
+
+		int chosenLen = distr(gen);
+		for (int d = 0; d < chosenLen; ++d)
+		{
+			int chosen = charDist(gen);
+
+			switch (chosen)
+			{
+				case 0:
+					data += "C";
+					break;
+				case 1:
+					data += "A";
+					break;
+				case 2:
+					data += "G";
+					break;
+				case 3:
+					data += "T";
+					break;
+				default:
+					data += "A";
+					break;
+			}
+		}
+
+		if (FastaFile)
+			FASTASequences.insert(std::pair<std::string, std::string>(name, data));
+		else
+			FASTQData.insert(std::pair<std::string, std::string>(name, data));
+	}
+
+	Loaded = true;
 }

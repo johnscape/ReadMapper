@@ -40,6 +40,8 @@ public:
 	std::map<std::string, std::string>::const_iterator GetSequenceStart() const;
 	std::map<std::string, std::string>::const_iterator  GetSeqneceEnd() const;
 
+	void GenerateData(bool fasta, unsigned int count, int minLength, int maxLength);
+
 private:
 	static bool IsFasta(const char* fileName);
 	bool ReadFASTA(const char* fastaFile);
