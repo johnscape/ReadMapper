@@ -17,6 +17,13 @@ class NotLoadedException : public std::exception
 	}
 };
 
+class InvalidFileException : public std::exception
+{
+	const char* what() const throw() {
+		return "File type cannot be determined.";
+	}
+};
+
 /**
  * @brief A class for reading and parsing FASTA and FASTQ files
  */

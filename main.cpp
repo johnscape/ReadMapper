@@ -1,15 +1,22 @@
 #include <iostream>
+#include <cstring>
 #include "DataIO.h"
 #include "StringMatcher.h"
 
-#define METHOD 0 //Use 0 for naive, 1 for border search, and 2 for KHM
+#define METHOD 1 //Use 0 for naive, 1 for border search, and 2 for KHM
 
 int main(int argc, char** argv)
 {
+	if (argc == 2 && (strcmp(argv[1], "help") != 0 || strcmp(argv[1], "--help") != 0))
+	{
+		std::cout << "Usage: readmapper fastaFile.fa fastqFile.fq" << std::endl;
+		return 0;
+	}
+
 	if (argc < 3)
 	{
-		std::cout << "Missing arguments!" << std::endl << "Use the following: readmapper.exe fastaFile.fa fastqFile.fq"
-		<< std::endl;
+		std::cout << "Missing arguments!" << std::endl << "Use the following: readmapper fastaFile.fa fastqFile.fq"
+				  << std::endl;
 		return 1;
 	}
 
@@ -38,15 +45,16 @@ int main(int argc, char** argv)
 			std::string pattern = outer->second;
 
 			std::vector<unsigned int> matches;
-			if (METHOD == 0)
-				matches = StringMatcher::NaiveSearch(text, pattern);
-			else if (METHOD == 1)
-				matches = StringMatcher::BorderSearch(text, pattern);
-			else
-				matches = StringMatcher::KMPSearch(text, pattern);
+#if METHOD == 0
+			matches = StringMatcher::NaiveSearch(text, pattern);
+#elif METHOD == 1
+			matches = StringMatcher::BorderSearch(text, pattern);
+#elif METHOD == 2
+			matches = StringMatcher::KMPSearch(text, pattern);
+#endif
 			for (int i = 0; i < matches.size(); ++i)
 			{
-				std::cout << outer->first << '\t' << '0' << '\t' << inner->first << '\t' << matches[i] << '\t' << '0'
+				std::cout << outer->first << '\t' << '0' << '\t' << inner->first << '\t' << (matches[i] + 1) << '\t' << '0'
 				<< '\t' << pattern.size() << 'M' << '\t' << '*' << '\t' << '0' << '\t' << '0' << '\t' << outer->second
 				<< '\t';
 				for (int j = 0; j < pattern.size(); ++j)

@@ -36,8 +36,8 @@ bool DataIO::IsFasta(const char *fileName)
 			dotLoc = i;
 	}
 
-	if (dotLoc + 2 <= strlen(fileName))
-		return false; //TODO: throw exception here
+	if (dotLoc + 2 >= strlen(fileName))
+		throw InvalidFileException();
 
 	if (fileName[dotLoc + 1] == 'f')
 	{
@@ -45,7 +45,7 @@ bool DataIO::IsFasta(const char *fileName)
 			return true;
 		else if (fileName[dotLoc + 2] == 'q')
 			return false;
-		//TODO: thow exception here
+		throw InvalidFileException();
 	}
 
 	return false;
@@ -63,13 +63,13 @@ bool DataIO::ReadFASTA(const char *fastaFile)
 
 	FASTASequences.clear();
 
-	std::string line;
-
 	while (reader.good())
 	{
 		std::string name, data;
 		std::getline(reader, name);
 		std::getline(reader, data);
+		if (name.empty() || data.empty())
+			break;
 		name = name.substr(1);
 		FASTASequences.insert(std::pair<std::string, std::string>(name, data));
 	}
@@ -91,15 +91,16 @@ bool DataIO::ReadFASTQ(const char *fastqFile)
 		return false;
 	}
 
-	std::string line;
-	std::string lastName;
 
 	while (reader.good())
 	{
-		std::getline(reader, line);
-		lastName = line.erase(0, 1);
-		std::getline(reader, line);
-		FASTQData.insert(std::pair<std::string, std::string>(lastName, line));
+		std::string name, data;
+		std::getline(reader, name);
+		std::getline(reader, data);
+		if (name.empty() || data.empty())
+			break;
+		name = name.substr(1);
+		FASTQData.insert(std::pair<std::string, std::string>(name, data));
 		for (int i = 0; i < 2; ++i)
 			reader.ignore(2048, '\n');
 	}
