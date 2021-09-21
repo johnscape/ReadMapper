@@ -1,7 +1,3 @@
-//
-// Created by attila on 2021. 09. 10..
-//
-
 #include "StringMatcher.h"
 
 std::vector<unsigned int> StringMatcher::NaiveSearch(std::string sample, std::string pattern)
@@ -81,6 +77,7 @@ std::vector<unsigned int> StringMatcher::BorderSearch(std::string sample, std::s
 
 std::vector<unsigned int> StringMatcher::KMPSearch(std::string sample, std::string pattern)
 {
+	//TODO: Implement KMP
 	std::vector<unsigned int> result;
 	return result;
 }

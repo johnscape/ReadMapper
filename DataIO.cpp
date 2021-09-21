@@ -1,7 +1,3 @@
-//
-// Created by attila on 2021. 09. 12..
-//
-
 #include "DataIO.h"
 #include <cstring>
 #include <iostream>
@@ -203,4 +199,9 @@ bool DataIO::Save(const char *fileName)
 	if (Verbose)
 		std::cout << "Data saved as " << fileName << std::endl;
 	return true;
+}
+
+bool DataIO::Save(const std::string &fileName)
+{
+	return Save(fileName.c_str());
 }

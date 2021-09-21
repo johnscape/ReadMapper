@@ -1,7 +1,3 @@
-//
-// Created by attila on 2021. 09. 12..
-//
-
 #ifndef GENOME_DATAIO_H
 #define GENOME_DATAIO_H
 

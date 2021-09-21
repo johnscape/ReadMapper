@@ -1,7 +1,3 @@
-//
-// Created by attila on 2021. 09. 10..
-//
-
 #ifndef GENOME_STRINGMATCHER_H
 #define GENOME_STRINGMATCHER_H
 
