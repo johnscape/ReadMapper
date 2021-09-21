@@ -170,3 +170,37 @@ std::map<std::string, std::string>::const_iterator DataIO::GetSeqneceEnd() const
 
 	return it;
 }
+
+bool DataIO::Save(const char *fileName)
+{
+	if (!Loaded)
+		return false;
+	std::ofstream writer(fileName);
+	if (FastaFile)
+	{
+		std::map<std::string, std::string>::iterator it = FASTASequences.begin();
+		while (it != FASTASequences.end())
+		{
+			writer << ">" << it->first << std::endl << it->second << std::endl;
+			it++;
+		}
+	}
+	else
+	{
+		std::map<std::string, std::string>::iterator it = FASTQData.begin();
+		while (it != FASTQData.end())
+		{
+			writer << "@" << it->first << std::endl << it->second << std::endl << "+" << std::endl;
+			for (unsigned int i = 0; i < it->second.size(); ++i)
+			{
+				writer << "~";
+			}
+			writer << std::endl;
+			it++;
+		}
+	}
+	writer.close();
+	if (Verbose)
+		std::cout << "Data saved as " << fileName << std::endl;
+	return true;
+}

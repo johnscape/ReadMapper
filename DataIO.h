@@ -35,6 +35,9 @@ public:
 	bool Open(const char* fileName);
 	bool Open(const std::string& fileName);
 
+	bool Save(const char* fileName);
+	bool Save(const std::string& fileName);
+
 
 	std::string GetData(std::string id) const;
 	unsigned int GetSequenceCount() const;

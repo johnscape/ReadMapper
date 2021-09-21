@@ -3,7 +3,7 @@
 #include "DataIO.h"
 #include "StringMatcher.h"
 
-#define METHOD 1 //Use 0 for naive, 1 for border search, and 2 for KHM
+#define METHOD 0 //Use 0 for naive, 1 for border search, and 2 for KHM
 
 int main(int argc, char** argv)
 {
