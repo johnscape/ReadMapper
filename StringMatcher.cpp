@@ -24,11 +24,11 @@ std::vector<unsigned int> StringMatcher::NaiveSearch(std::string sample, std::st
 
 std::vector<unsigned int> StringMatcher::BorderSearch(std::string sample, std::string pattern)
 {
-	std::vector<unsigned int> positions;
-	std::vector<unsigned int> borderArray;
-	borderArray.push_back(0);
-
 	sample = pattern + '$' + sample;
+	std::vector<unsigned int> positions;
+	std::vector<unsigned int> borderArray(sample.size(), 0);
+
+	unsigned int n = pattern.size();
 
 	//First we have to build the border array
 	for (int i = 1; i < sample.size(); ++i)
@@ -62,14 +62,14 @@ std::vector<unsigned int> StringMatcher::BorderSearch(std::string sample, std::s
 		//everything.
 
 		//We store the result in the border array
-		borderArray.push_back(result);
+		borderArray[i] = result;
 
 		//Now, we make a check: If the result is as long as the pattern, then we have a mach.
 		//This happens because our string has the pattern at the beginning and a $ character after it, which
 		//shouldn't appear anywhere else in the text. Because of if, if the border is as long as the pattern,
 		//then the border IS the pattern, therefore we found a match:
-		if (result == pattern.size())
-			positions.push_back(i - pattern.size() + 1);
+		if (result == n)
+			positions.push_back(i - n + 1);
 	}
 
 	return positions;
