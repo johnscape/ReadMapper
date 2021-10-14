@@ -4,13 +4,12 @@
 #include <vector>
 #include <string>
 
-class StringMatcher
+namespace StringMatcher
 {
-public:
-	static std::vector<unsigned int> NaiveSearch(std::string sample, std::string pattern);
-	static std::vector<unsigned int> BorderSearch(std::string sample, std::string pattern);
-	static std::vector<unsigned int> KMPSearch(std::string sample, std::string pattern);
-};
+	void NaiveSearch(std::string sample, std::string pattern, std::vector<unsigned int>& results);
+	void BorderSearch(std::string sample, std::string pattern, std::vector<unsigned int>& results);
+	void KMPSearch(std::string sample, std::string pattern, std::vector<unsigned int>& results);
+}
 
 
 #endif //GENOME_STRINGMATCHER_H

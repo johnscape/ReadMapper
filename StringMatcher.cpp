@@ -1,9 +1,7 @@
 #include "StringMatcher.h"
 
-std::vector<unsigned int> StringMatcher::NaiveSearch(std::string sample, std::string pattern)
+void StringMatcher::NaiveSearch(std::string sample, std::string pattern, std::vector<unsigned int>& results)
 {
-	std::vector<unsigned int> positions;
-
 	for (int i = 0; i < sample.size() - pattern.size(); ++i)
 	{
 		bool match = true;
@@ -16,16 +14,13 @@ std::vector<unsigned int> StringMatcher::NaiveSearch(std::string sample, std::st
 			}
 		}
 		if (match)
-			positions.push_back(i);
+			results.push_back(i);
 	}
-
-	return positions;
 }
 
-std::vector<unsigned int> StringMatcher::BorderSearch(std::string sample, std::string pattern)
+void StringMatcher::BorderSearch(std::string sample, std::string pattern, std::vector<unsigned int>& results)
 {
 	sample = pattern + '$' + sample;
-	std::vector<unsigned int> positions;
 	std::vector<unsigned int> borderArray(sample.size(), 0);
 
 	unsigned int n = pattern.size();
@@ -69,15 +64,11 @@ std::vector<unsigned int> StringMatcher::BorderSearch(std::string sample, std::s
 		//shouldn't appear anywhere else in the text. Because of if, if the border is as long as the pattern,
 		//then the border IS the pattern, therefore we found a match:
 		if (result == n)
-			positions.push_back(i - n + 1);
+			results.push_back(i - n + 1);
 	}
-
-	return positions;
 }
 
-std::vector<unsigned int> StringMatcher::KMPSearch(std::string sample, std::string pattern)
+void StringMatcher::KMPSearch(std::string sample, std::string pattern, std::vector<unsigned int>& results)
 {
 	//TODO: Implement KMP
-	std::vector<unsigned int> result;
-	return result;
 }
