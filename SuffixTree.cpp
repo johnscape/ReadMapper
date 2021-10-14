@@ -1,8 +1,5 @@
-//
-// Created by attila on 2021. 10. 12..
-//
-
 #include "SuffixTree.h"
+#include <iostream>
 
 SuffixTree::SuffixTree() : Root(nullptr)
 {
@@ -12,6 +9,13 @@ SuffixTree::SuffixTree() : Root(nullptr)
 SuffixTree::~SuffixTree()
 {
 	delete Root;
+}
+
+void SuffixTree::PrintTree()
+{
+	if (!Root)
+		return;
+	PrintNode(Root);
 }
 
 void SuffixTree::BuildNaiveTree(const char *text, unsigned int textLen)
@@ -37,8 +41,7 @@ void SuffixTree::InsertNodeNaive(const char* text, Range textPos, TreeNode* star
 	TreeNode* childToFollow = startNode->IsStringInChildren(textPos.Start, text);
 	if (!childToFollow)
 	{
-		TreeNode* newNode = new TreeNode(textPos.Start, textPos.End);
-		startNode->Children.push_back(newNode);
+		InsertChild(startNode, textPos);
 		return;
 	}
 	else
@@ -70,13 +73,12 @@ void SuffixTree::SplitEdge(SuffixTree::TreeNode *parent, SuffixTree::TreeNode *c
 	//Modify starting position of the original child
 	child->FirstChar = splitPos;
 
-	//Remove original child from the original parent
-	std::vector<TreeNode*>::iterator it = parent->Children.begin();
-	while (it != parent->Children.end())
+	//Replace child with the inserted node
+	for (int i = 0; i < parent->Children.size(); ++i)
 	{
-		if (*it == child)
+		if (parent->Children[i] == child)
 		{
-			parent->Children.erase(it);
+			parent->Children[i] = inserted;
 			break;
 		}
 	}
@@ -89,5 +91,17 @@ void SuffixTree::InsertChild(SuffixTree::TreeNode *parent, SuffixTree::Range tex
 {
 	TreeNode* node = new TreeNode(textRange);
 	parent->Children.push_back(node);
+}
+
+void SuffixTree::PrintNode(SuffixTree::TreeNode *node, unsigned int depth)
+{
+	for (int i = 0; i < depth; ++i)
+		std::cout << '\t';
+	std::cout << "Node range: \t[" << node->FirstChar << ", " << node->LastChar << "[";
+	std::cout << "\tNode children count: " << node->Children.size() << std::endl;
+	for (TreeNode* i : node->Children)
+	{
+		PrintNode(i, depth + 1);
+	}
 }
 

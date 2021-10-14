@@ -10,6 +10,8 @@ public:
 	SuffixTree();
 	~SuffixTree();
 
+	void PrintTree();
+
 	void BuildNaiveTree(const char* text, unsigned int textLen);
 	void BuildNaiveTree(const std::string& text);
 
@@ -39,7 +41,7 @@ private:
 
 		TreeNode* IsStringInChildren(unsigned int pos, const char* text)
 		{
-			for (auto & i : Children)
+			for (TreeNode* i : Children)
 			{
 				if (text[i->FirstChar] == text[pos])
 					return i;
@@ -56,6 +58,7 @@ private:
 	//Common methods
 	void SplitEdge(TreeNode* parent, TreeNode* child, unsigned int splitPos, Range insertText);
 	void InsertChild(TreeNode* parent, Range textRange);
+	void PrintNode(TreeNode* node, unsigned int depth = 0);
 
 
 };
